@@ -2,7 +2,7 @@
 
 # If arg of path not passed in throw err and ask for it
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <file-path>"
+    echo "Usage: $0 <file-path>" >&2
     exit 1
 fi
 # Define the input file path as arg passed in by user
