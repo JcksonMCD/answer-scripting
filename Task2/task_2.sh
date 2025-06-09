@@ -11,3 +11,18 @@ fi                                          # Closing if statement - bash way of
 
 # Print
 echo "You entered: $api_url"
+
+# Step 2: Make the API call and store the response
+response=$(curl -s "$api_url")
+
+# Check if curl worked
+if [ $? -ne 0 ] || [ -z "$response" ]; then
+  echo "Failed to fetch data from the API."
+  exit 1
+fi
+
+echo "API call successful."
+
+# Step 3: Sort and print the items by name
+echo "Sorted items by name:"
+echo "$response" | jq 'sort_by(.name | ascii_downcase)[]'
