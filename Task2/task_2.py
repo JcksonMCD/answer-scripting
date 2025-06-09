@@ -14,9 +14,9 @@ def get_posts():
         print("Error fetching data:", e)
         return None
     
-def order_by_name(posts):
+def order_by_name(universities):
     try:
-        sorted_data = sorted(posts, key=lambda x: x['name'].lower())
+        sorted_data = sorted(universities, key=lambda x: x['name'].lower())
     except KeyError:
         return print("Error: Missing 'name' field in one or more items")
 
