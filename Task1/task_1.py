@@ -24,8 +24,9 @@ if found_path:
     except Exception as e:
         print(f"Failed to read the file: {e}")
 
-    # Step 3: Copy file to the 'Ouput' folder
-    output_dir = os.path.join(os.getcwd(), 'Ouput')
+    # Step 3: Copy file to the Output folder
+    output_dir = os.path.join(os.getcwd(), 'Output')
+    os.makedirs(output_dir, exist_ok=True)
 
     destination_path = os.path.join(output_dir, target_filename)
 
