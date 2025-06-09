@@ -3,11 +3,11 @@
 # Step 1: Ask user for the API URL
 read -p "Enter the API URL: " api_url
 
-# If blank exit script
+# If blank, exit script
 if [ -z "$api_url" ]; then
-  echo "No URL provided. Exiting."
+  echo "No URL provided. Exiting." >&2
   exit 1
-fi                                          # Closing if statement - bash way of doing if statements
+fi  # Closing if statement - bash way of doing if statements
 
 # Print
 echo "You entered: $api_url"
@@ -17,7 +17,7 @@ response=$(curl -s "$api_url")
 
 # Check if curl worked
 if [ $? -ne 0 ] || [ -z "$response" ]; then
-  echo "Failed to fetch data from the API."
+  echo "Failed to fetch data from the API." >&2
   exit 1
 fi
 
