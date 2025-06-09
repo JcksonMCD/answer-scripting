@@ -3,6 +3,10 @@
 import requests, json, sys
 
 def get_posts():
+    if len(sys.argv) < 2:
+        print("Usage: python script.py <url>")
+        sys.exit(1)
+        
     url = sys.argv[1]
 
     try:
