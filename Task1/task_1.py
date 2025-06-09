@@ -25,8 +25,11 @@ if found_path:
         print(f"Failed to read the file: {e}")
 
     # Step 3: Copy file to the Output folder
-    output_dir = os.path.join(os.getcwd(), 'Output')
-    os.makedirs(output_dir, exist_ok=True)
+    try:
+        output_dir = os.path.join(os.getcwd(), 'Output')
+        os.makedirs(output_dir, exist_ok=True)
+    except Exception as e:
+        print(f"Failed to create output directory: {e}")
 
     destination_path = os.path.join(output_dir, target_filename)
 
