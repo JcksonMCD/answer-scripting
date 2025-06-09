@@ -1,10 +1,9 @@
 #!/usr/bin/env python3 
 
-import requests
-import json
+import requests, json, sys
 
 def get_posts():
-    url = "http://universities.hipolabs.com/search?country=United+Kingdom"
+    url = sys.argv[1]
 
     try:
         response = requests.get(url)
