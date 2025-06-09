@@ -35,5 +35,13 @@ if found_path:
     except Exception as e:
         print(f"Failed to copy file: {e}")
 
+    # Step 4: Delete original file
+    try:
+        os.remove(found_path)
+        print(f"Original file deleted from: {found_path}")
+    except Exception as e:
+        print(f"Failed to delete original file: {e}")
+
+# If no file can be found end the script
 else:
     print("File not found.")
