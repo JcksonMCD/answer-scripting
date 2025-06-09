@@ -11,7 +11,7 @@ logging.basicConfig(
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Search, read, copy, and delete a file from Input/ to Output/")
-parser.add_argument("filename", help="Name of the file to search for (e.g. 'Yorkshire Tea.txt')")
+parser.add_argument("filename", help="Name of the file to search for (e.g. 'Questions.txt')")
 args = parser.parse_args()
 
 target_filename = args.filename
@@ -62,5 +62,6 @@ if found_path:
         exit(1)
 
 else:
-    logging.error("File not found.")
+    logging.error("File not found or entered correctly.\n" \
+    "example usage) py task_1.py Questions.txt")
     exit(1)
