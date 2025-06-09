@@ -8,15 +8,10 @@ def get_posts():
 
     try:
         response = requests.get(url)
-
-        if response.status_code == 200:
-            posts = response.json()
-            return posts
-        else:
-            print ('Error: ', response.status_code)
-            return None
+        response.raise_for_status()
+        return response.json()
     except requests.exceptions.RequestException as e:
-        print('Error: ', e)
+        print("Error fetching data:", e)
         return None
     
 def order_by_name(posts):
