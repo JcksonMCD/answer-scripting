@@ -30,18 +30,22 @@ else
 fi
 
 # Step 3: Print contents of file 
-cat "$found_path" 
+if ! cat "$found_path"; then
+  echo "Failed to read contents of $found_path" >&2
+  exit 1
+fi
 
 # Step 4: Copy the file to Output
 mkdir -p "$output_dir"
-cp "$found_path" "$output_dir"
+if ! cp "$found_path" "$output_dir"; then
+  echo "Failed to copy $found_path to $output_dir" >&2
+  exit 1
+fi
 echo "File copied to: $output_dir" >&2
 
 # Step 5: Delete the original file
-rm "$found_path"
+if ! rm "$found_path"; then
+  echo "Failed to delete $found_path" >&2
+  exit 1
+fi
 echo "Original file deleted from: $found_path" >&2
-
-
-
-
-
