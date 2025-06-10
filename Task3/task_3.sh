@@ -39,4 +39,4 @@ JSON_STRING=$(jq -n \
   '{add_total: $add, minus_total: $minus, times_total: $times}')
 
 # Output to file
-echo "$JSON_STRING" > output-calculations.json
+echo "$JSON_STRING" > output-calculations.json || >&2 echo "Output file edit unsucessful"; exit 1;
