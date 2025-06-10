@@ -1,13 +1,19 @@
 # Step 1: Input the file path
 param (
-    [string]$InputPath
+    [string]$InputPath,
+    [switch]$Interactive
 )
 
-# Prompt if no input path provided
-if (-not $InputPath) {
+# If interactive flag is used, ask the user
+if ($Interactive) {
     $InputPath = Read-Host "Enter the path to the input JSON file"
 }
 
+# If still no input, show error and exit
+if (-not $InputPath) {
+    Write-Error "No input path provided. Use -Interactive or provide a file path directly."
+    exit 1
+}
 # Check file existence
 if (-not (Test-Path $InputPath)) {
     Write-Error "File not found at path: $InputPath"

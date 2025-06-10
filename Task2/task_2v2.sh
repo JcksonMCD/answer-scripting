@@ -1,12 +1,16 @@
 #!/bin/bash
 
-# Step 1: Get the API URL from command-line argument
-api_url="$1"
+# Step 1: Get the API URL from command-line argument or runtime
+if [[ "$1" == "--interactive" || "$1" == "-i" ]]; then
+  read -p "Enter the API URL: " api_url
+else
+  api_url="$1"
+fi
 
 # If blank, exit script
 if [ -z "$api_url" ]; then
   echo "No URL provided. Exiting." >&2
-  echo "Usage: $0 <API_URL>" >&2
+  echo "Usage: $0 <API_URL> or $0 --interactive" >&2
   exit 1
 fi
 
