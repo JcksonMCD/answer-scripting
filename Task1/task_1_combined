@@ -1,0 +1,75 @@
+import os
+import shutil
+import argparse
+import logging
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s"
+)
+
+# Parse arguments
+parser = argparse.ArgumentParser(description="Search, read, copy, and delete a file from Input/ to Output/")
+parser.add_argument("filename", nargs="?", help="Name of the file to search for (e.g. 'Questions.txt')")
+parser.add_argument("-i", "--interactive", action="store_true", help="Prompt for filename interactively")
+args = parser.parse_args()
+
+# Determine filename source
+if args.interactive:
+    target_filename = input("Enter the name of the file to search for (e.g. 'Yorkshire Tea.txt'): ")
+elif args.filename:
+    target_filename = args.filename
+else:
+    logging.error("No filename provided. Use --interactive or pass filename as an argument.")
+    exit(1)
+
+input_dir = os.path.join(os.getcwd(), 'Input')
+found_path = None
+
+# Step 1: Search for the file
+for root, _, files in os.walk(input_dir):
+    if target_filename in files:
+        found_path = os.path.join(root, target_filename)
+        break
+
+if found_path:
+    logging.info(f"File found at: {found_path}")
+
+    # Step 2: Read and print the contents
+    try:
+        with open(found_path, 'r') as file:
+            content = file.read()
+            logging.info(f"\nContents of '{target_filename}':\n{content}\n")
+    except Exception as e:
+        logging.error(f"Failed to read the file: {e}")
+        exit(1)
+
+    # Step 3: Create Output directory
+    try:
+        output_dir = os.path.join(os.getcwd(), 'Output')
+        os.makedirs(output_dir, exist_ok=True)
+    except Exception as e:
+        logging.error(f"Failed to create output directory: {e}")
+        exit(1)
+
+    # Step 4: Copy to Output
+    destination_path = os.path.join(output_dir, target_filename)
+    try:
+        shutil.copy2(found_path, destination_path)
+        logging.info(f"File copied to: {destination_path}")
+    except Exception as e:
+        logging.error(f"Failed to copy file: {e}")
+        exit(1)
+
+    # Step 5: Delete original
+    try:
+        os.remove(found_path)
+        logging.info(f"Original file deleted from: {found_path}")
+    except Exception as e:
+        logging.error(f"Failed to delete original file: {e}")
+        exit(1)
+
+else:
+    logging.error("File not found in 'Input/'. Check spelling or try --interactive.")
+    exit(1)
