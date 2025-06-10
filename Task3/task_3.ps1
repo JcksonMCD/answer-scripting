@@ -24,36 +24,53 @@ try {
 
 # Step 3: Perform the calculations
 
-# Initialize result - Creates empty hash table to hold all results
+# Initialise result - Creates empty hash table to hold all results
 $result = @{}
 
 # Calculate addition
-if ($jsonData.add) {
-    $result.add = ($jsonData.add | Measure-Object -Sum).Sum
-}
-# Calculate subtraction
-if ($jsonData.Minus -and $jsonData.Minus.Count -gt 0) {
-    $first = $jsonData.Minus[0]
-    $rest = $jsonData.Minus[1..($jsonData.Minus.Count - 1)]
-
-    foreach ($num in $rest) {
-        $first -= $num
+try {
+    if ($jsonData.add) {
+        $result.add = ($jsonData.add | Measure-Object -Sum).Sum
     }
+} catch {
+    Write-Warning "Failed to calculate addition: $_"
+}
 
-    $result.Minus = $first
+# Calculate subtraction
+try {
+    if ($jsonData.Minus -and $jsonData.Minus.Count -gt 0) {
+        $first = $jsonData.Minus[0]
+        $rest = $jsonData.Minus[1..($jsonData.Minus.Count - 1)]
+
+        foreach ($num in $rest) {
+            $first -= $num
+        }
+
+        $result.Minus = $first
+    }
+} catch {
+    Write-Warning "Failed to calculate subtraction: $_"
 }
 
 # Calculate multiplication
-if ($jsonData.times) {
-    $product = 1
-    foreach ($n in $jsonData.times) {
-        $product *= $n
+try {
+    if ($jsonData.times) {
+        $product = 1
+        foreach ($n in $jsonData.times) {
+            $product *= $n
+        }
+        $result.times = $product
     }
-    $result.times = $product
+} catch {
+    Write-Warning "Failed to calculate multiplication: $_"
 }
 
 # Step 4: Write to output JSON file
-$outputPath = "output-calculations.json"
-$result | ConvertTo-Json -Depth 2 | Out-File -Encoding UTF8 $outputPath
-
-Write-Host "Results written to $outputPath"
+try {
+    $outputPath = "output-calculations.json"
+    $result | ConvertTo-Json -Depth 2 | Out-File -Encoding UTF8 $outputPath
+    Write-Host "Results written to $outputPath"
+} catch {
+    Write-Error "Failed to write to output file: $_"
+    exit 1
+}
