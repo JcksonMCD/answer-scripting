@@ -9,16 +9,25 @@ logging.basicConfig(
     format="%(levelname)s: %(message)s"
 )
 
-# Parse command-line arguments
+# Parse arguments
 parser = argparse.ArgumentParser(description="Search, read, copy, and delete a file from Input/ to Output/")
-parser.add_argument("filename", help="Name of the file to search for (e.g. 'Questions.txt')")
+parser.add_argument("filename", nargs="?", help="Name of the file to search for (e.g. 'Questions.txt')")
+parser.add_argument("-i", "--interactive", action="store_true", help="Prompt for filename interactively")
 args = parser.parse_args()
 
-target_filename = args.filename
+# Determine filename source
+if args.interactive:
+    target_filename = input("Enter the name of the file to search for (e.g. 'Yorkshire Tea.txt'): ")
+elif args.filename:
+    target_filename = args.filename
+else:
+    logging.error("No filename provided. Use --interactive or pass filename as an argument.")
+    exit(1)
+
 input_dir = os.path.join(os.getcwd(), 'Input')
 found_path = None
 
-# Step 1: Search through 'Input/' recursively or break
+# Step 1: Search for the file
 for root, _, files in os.walk(input_dir):
     if target_filename in files:
         found_path = os.path.join(root, target_filename)
@@ -27,16 +36,16 @@ for root, _, files in os.walk(input_dir):
 if found_path:
     logging.info(f"File found at: {found_path}")
 
-    # Step 2: Read and print contents of the file
+    # Step 2: Read and print the contents
     try:
         with open(found_path, 'r') as file:
             content = file.read()
-            logging.info(f"\nContents of '{target_filename}'\n{content}\n")
+            logging.info(f"\nContents of '{target_filename}':\n{content}\n")
     except Exception as e:
         logging.error(f"Failed to read the file: {e}")
         exit(1)
 
-    # Step 3: Create Output directory if needed
+    # Step 3: Create Output directory
     try:
         output_dir = os.path.join(os.getcwd(), 'Output')
         os.makedirs(output_dir, exist_ok=True)
@@ -44,7 +53,7 @@ if found_path:
         logging.error(f"Failed to create output directory: {e}")
         exit(1)
 
-    # Step 4: Copy file to Output
+    # Step 4: Copy to Output
     destination_path = os.path.join(output_dir, target_filename)
     try:
         shutil.copy2(found_path, destination_path)
@@ -53,7 +62,7 @@ if found_path:
         logging.error(f"Failed to copy file: {e}")
         exit(1)
 
-    # Step 5: Delete original file
+    # Step 5: Delete original
     try:
         os.remove(found_path)
         logging.info(f"Original file deleted from: {found_path}")
@@ -62,6 +71,5 @@ if found_path:
         exit(1)
 
 else:
-    logging.error("File not found or entered correctly.\n" \
-    "example usage) py task_1.py Questions.txt")
+    logging.error("File not found in 'Input/'. Check spelling or try --interactive.")
     exit(1)
