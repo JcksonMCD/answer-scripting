@@ -14,6 +14,7 @@ if (-not $InputPath) {
     Write-Error "No input path provided. Use -Interactive or provide a file path directly."
     exit 1
 }
+
 # Check file existence
 if (-not (Test-Path $InputPath)) {
     Write-Error "File not found at path: $InputPath"
@@ -44,15 +45,15 @@ try {
 
 # Calculate subtraction
 try {
-    if ($jsonData.Minus -and $jsonData.Minus.Count -gt 0) {
-        $first = $jsonData.Minus[0]
-        $rest = $jsonData.Minus[1..($jsonData.Minus.Count - 1)]
+    if ($jsonData.minus -and $jsonData.minus.Count -gt 0) {
+        $first = $jsonData.minus[0]
+        $rest = $jsonData.minus[1..($jsonData.minus.Count - 1)]
 
         foreach ($num in $rest) {
             $first -= $num
         }
 
-        $result.Minus = $first
+        $result.minus = $first
     }
 } catch {
     Write-Warning "Failed to calculate subtraction: $_"
@@ -71,10 +72,16 @@ try {
     Write-Warning "Failed to calculate multiplication: $_"
 }
 
-# Step 4: Write to output JSON file
+# Step 4: Normalise result keys to lowercase
+$normalisedResult = @{}
+foreach ($key in $result.Keys) {
+    $normalisedResult[$key.ToLower()] = $result[$key]
+}
+
+# Step 5: Write to output JSON file
 try {
     $outputPath = "output-calculations.json"
-    $result | ConvertTo-Json -Depth 2 | Out-File -Encoding UTF8 $outputPath
+    $normalisedResult | ConvertTo-Json -Depth 2 | Out-File -Encoding UTF8 $outputPath
     Write-Host "Results written to $outputPath"
 } catch {
     Write-Error "Failed to write to output file: $_"
