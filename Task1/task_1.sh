@@ -35,7 +35,11 @@ cat "$found_path"
 # Step 4: Copy the file to Output
 mkdir -p "$output_dir"
 cp "$found_path" "$output_dir"
-echo "File copied to: $output_dir"
+echo "File copied to: $output_dir" >&2
+
+# Step 5: Delete the original file
+rm "$found_path"
+echo "Original file deleted from: $found_path" >&2
 
 
 
