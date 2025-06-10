@@ -8,10 +8,9 @@ param (
 
 # Get the script's directory
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-Set-Location $ScriptDir
 
 try {
-    $File = Get-ChildItem -Path . -Filter $FileName -Recurse -ErrorAction Stop | Select-Object -First 1
+    $File = Get-ChildItem -Path $ScriptDir -Filter $FileName -Recurse -ErrorAction Stop | Select-Object -First 1
 } catch {
     Write-Error "File '$FileName' not found."
     exit 1
