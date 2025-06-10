@@ -43,6 +43,7 @@ try {
 }
 catch {
     Write-Error "Error while creating new file"
+    Exit 1
 }
 
 # Delete the original file
@@ -51,4 +52,5 @@ try {
 }
 catch {
     Write-Error "Error while deleting the original file"
+    Exit 1
 }
