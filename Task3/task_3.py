@@ -8,6 +8,7 @@ rootDir = filePath.anchor
 rootPath = Path(rootDir)
 
 targetFile = input('Enter file name: ')
+#rglob is like bringing a flamethrower to a BBQ so would be best to find a more elegant way to search all for the required file. 
 textFiles = list(rootPath.rglob(targetFile))
 
 if textFiles:
@@ -17,21 +18,23 @@ if textFiles:
 
     data = json.loads(content)
 
-    add = sum(data.get("Add", []))
+    addTotal = sum(data.get("Add", []))
     minus = data.get("Minus", [])
     minusTotal = minus[0]
     
     for num in minus[1:]:
             minusTotal -= num
 
-    multiply = 1
+    multiplyTotal = 1
+
     for num in data.get("Times", []):
-            multiply *= num
+        multiplyTotal *= num
 
-    print(f"Addition Results: {add}")
-    print(f"Subtraction Results: {minusTotal}")
-    print(f"Results of times: {multiply}")
+    calculated = {'add': addTotal, 'minus': minusTotal, 'multiply': multiplyTotal}
 
+    with open('calculated.json', 'w', encoding='utf-8') as f:
+        json.dump(calculated, f, ensure_ascii=False, indent=4)
+    
 else:
     print("File not found.")
 
