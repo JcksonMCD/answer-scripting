@@ -6,8 +6,9 @@ param (
     [string]$FileName
 )
 
-# Search for the file of that name (use try catch for if it is not found)
-Set-Location C:
+# Get the script's directory
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+Set-Location $ScriptDir
 
 try {
     $File = Get-ChildItem -Path . -Filter $FileName -Recurse -ErrorAction Stop | Select-Object -First 1
@@ -24,24 +25,21 @@ if (-not $File) {
 Set-Location $File.DirectoryName
 
 # Copy file contents
-$FileText = Get-Content $File.Name
+$FileText = Get-Content $File.FullName
 
 # Print contents to console
 Write-Output $FileText
 
-# Navigate out of Input folder to Task 1 directory
-Set-Location ..
-Set-Location ..
-
 # Create Output directory if it doesn't exist
-if (-not (Test-Path "Output")) {
-    New-Item -Name "Output" -ItemType Directory | Out-Null
+$OutputDir = Join-Path $ScriptDir "Output"
+if (-not (Test-Path $OutputDir)) {
+    New-Item -Path $OutputDir -ItemType Directory | Out-Null
 }
-Set-Location "Output"
 
-# Print contents to a new file in the output folder
+# Write contents to a new file in the Output folder
+$OutputPath = Join-Path $OutputDir $File.Name
 try {
-    Out-File -Force -Path $FileName -Encoding UTF8 -InputObject $FileText
+    Out-File -Force -Path $OutputPath -Encoding UTF8 -InputObject $FileText
 }
 catch {
     Write-Error "Error while creating new file"
@@ -49,7 +47,7 @@ catch {
 
 # Delete the original file
 try {
-    Remove-Item -Path "$($File.DirectoryName)\$($File.Name)" -Force
+    Remove-Item -Path $File.FullName -Force
 }
 catch {
     Write-Error "Error while deleting the original file"
