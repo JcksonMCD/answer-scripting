@@ -23,7 +23,7 @@ found_path=""
 found_path=$(find "$input_dir" -type f -name "$filename" | head -n 1)
 
 if [ -n "$found_path" ]; then
-  echo "File found at: $found_path" >&2
+  echo "File found at: $found_path"
 else
   echo "File not found in $input_dir" >&2
   exit 1
