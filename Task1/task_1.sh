@@ -41,11 +41,11 @@ if ! cp "$found_path" "$output_dir"; then
   echo "Failed to copy $found_path to $output_dir" >&2
   exit 1
 fi
-echo "File copied to: $output_dir" >&2
+echo "File copied to: $output_dir" >
 
 # Step 5: Delete the original file
 if ! rm "$found_path"; then
   echo "Failed to delete $found_path" >&2
   exit 1
 fi
-echo "Original file deleted from: $found_path" >&2
+echo "Original file deleted from: $found_path" 
